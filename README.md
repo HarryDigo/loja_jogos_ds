@@ -15,12 +15,13 @@ Aprender a fazer layout mais estilo html e CSS, de um jeito que fica mais bonito
 ### Modelos
 
 Jogo:
-- id: 5 dígitos aleatórios (meio estúpido, mas gosto assim)
+- id: auto increment
 - titulo: string
+- imagem: blob (complicado)
 - tipo: digital ou físico
-- genero: relação many to many (de algum jeito)
-- classificacao: etaria
-- estudio: string
+- genero: relação many to many (de algum jeito) (encontrei um jeito)
+- classificacao etaria: (int)
+- desenvolnedor: string
 - preco: decimal
 - lancamanto: data
 
@@ -29,5 +30,5 @@ Genero:
 - nome: string
 
 GeneroJogo:
-- Jogo: (PK/FK)
-- Genero: (PK/FK) com cascade de delete
+- Jogo: (PK/FK) com cascade de delete
+- Genero: (PK/FK) com cascade de delete (também)
