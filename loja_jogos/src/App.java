@@ -1,15 +1,10 @@
-import javax.swing.JFrame;
-import views.JogoForm;
+import controllers.MenuController;
 
 public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
-        JFrame oi = new JFrame();
-
-        JogoForm tela = new JogoForm(oi, "Teste");
-
-        oi.setVisible(true);
-        tela.setVisible(true);
+        MenuController controller = new MenuController();
+        controller.start();
     }
 }

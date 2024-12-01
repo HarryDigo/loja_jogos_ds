@@ -16,7 +16,7 @@ public class JogoRepository {
 
         try (
             Connection conn = DbConnection.getConnection();
-            PreparedStatement stmt =conn.prepareStatement(sql)
+            PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, jogo.getTitulo());
@@ -109,7 +109,7 @@ public class JogoRepository {
 
         try (
             Connection conn = DbConnection.getConnection();
-            PreparedStatement stmt =conn.prepareStatement(sql)
+            PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, jogo.getTitulo());

@@ -16,7 +16,7 @@ public class GeneroRepository {
 
         try (
             Connection conn = DbConnection.getConnection();
-            PreparedStatement stmt =conn.prepareStatement(sql)
+            PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, genero.getNome());
@@ -56,7 +56,7 @@ public class GeneroRepository {
         return generos;
     }
 
-    public Genero getJogoById(int id) {
+    public Genero getGeneroById(int id) {
         Genero genero = null;
         String sql = "SELECT * FROM genero WHERE id = ?";
 
@@ -91,7 +91,7 @@ public class GeneroRepository {
 
         try (
             Connection conn = DbConnection.getConnection();
-            PreparedStatement stmt =conn.prepareStatement(sql)
+            PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, genero.getNome());
