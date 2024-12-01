@@ -1,3 +1,5 @@
+package models;
+
 public class JogoGenero {
     private int jogoId;
     private int generoId;

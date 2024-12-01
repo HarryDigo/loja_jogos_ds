@@ -32,3 +32,7 @@ Genero:
 GeneroJogo:
 - Jogo: (PK/FK) com cascade de delete
 - Genero: (PK/FK) com cascade de delete (também)
+
+Comando para compilar (no src): javac -d ../bin \*.\* config/\*.java controllers/\*.java repositories/\*.java views/\*.java
+
+Comando para rodar (no src): java -cp "../bin;../lib/\*" App

@@ -1,3 +1,5 @@
+package models;
+
 import java.sql.Blob;
 import java.sql.Date;
 
@@ -7,26 +9,29 @@ public class Jogo {
     private java.sql.Blob imagem;
     private boolean tipo; //0 físico, 1 digital
     private int classificacao;
+    private String desenvolvedor;
     private double preco;
     private java.sql.Date lancamento;
 
     //construtores
 
-    public Jogo(int id, String titulo, Blob imagem, boolean tipo, int classificacao, double preco, Date lancamento) {
+    public Jogo(int id, String titulo, Blob imagem, boolean tipo, int classificacao, String desenvolvedor, double preco, Date lancamento) {
         this.id = id;
         this.titulo = titulo;
         this.imagem = imagem;
         this.tipo = tipo;
         this.classificacao = classificacao;
+        this.desenvolvedor = desenvolvedor;
         this.preco = preco;
         this.lancamento = lancamento;
     }
 
-    public Jogo(String titulo, Blob imagem, boolean tipo, int classificacao, double preco, Date lancamento) {
+    public Jogo(String titulo, Blob imagem, boolean tipo, int classificacao, String desenvolvedor, double preco, Date lancamento) {
         this.titulo = titulo;
         this.imagem = imagem;
         this.tipo = tipo;
         this.classificacao = classificacao;
+        this.desenvolvedor = desenvolvedor;
         this.preco = preco;
         this.lancamento = lancamento;
     }
@@ -63,6 +68,12 @@ public class Jogo {
     public void setClassificacao(int classificacao) {
         this.classificacao = classificacao;
     }
+    public String getDesenvolvedor() {
+        return desenvolvedor;
+    }
+    public void setDesenvolvedor(String desenvolvedor) {
+        this.desenvolvedor = desenvolvedor;
+    }
     public double getPreco() {
         return preco;
     }
@@ -74,5 +85,10 @@ public class Jogo {
     }
     public void setLancamento(java.sql.Date lancamento) {
         this.lancamento = lancamento;
+    }
+
+    @Override
+    public String toString() {
+        return "Jogo: { id: \""+id+"\", titulo: \""+titulo+"\", tipo: \""+tipo+"\", classificacao: \""+classificacao+"\", desenvolvedor: \""+desenvolvedor+"\", preco: \""+preco+"\", lancamento: \""+lancamento+"\" }";
     }
 }
