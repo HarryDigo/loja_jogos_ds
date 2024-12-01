@@ -224,5 +224,7 @@ public class JogoForm extends JDialog {
             jogo.setPreco(Double.parseDouble(txtPreco.getText().trim()));
             jogo.setLancamento(java.sql.Date.valueOf(txtLancamento.getText().trim()));
         }
+
+        System.out.println(jogo.toString());
     }
 }

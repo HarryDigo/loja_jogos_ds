@@ -29,4 +29,9 @@ public class Genero {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    @Override
+    public String toString() {
+        return "Gênero: { id: \""+id+"\", nome: \""+nome+"\" }";
+    }
 }

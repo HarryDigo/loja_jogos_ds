@@ -33,7 +33,7 @@ public class JogoRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao adicionar contato");
+            System.out.println("Erro ao adicionar jogo");
         }
     }
 
@@ -94,7 +94,7 @@ public class JogoRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar todos os jogos");
+            System.out.println("Erro ao buscar jogo");
         }
 
         return jogo;
@@ -123,13 +123,13 @@ public class JogoRepository {
 
             int affectedLines = stmt.executeUpdate();
             if (affectedLines > 0) {
-                System.out.println("Jogo adicionado com sucesso");
+                System.out.println("Jogo atualizado com sucesso");
             } else {
                 System.out.println("Jogo não encontrado");
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao adicionar contato");
+            System.out.println("Erro ao atualizar jogo");
         }
     }
 
