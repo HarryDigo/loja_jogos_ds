@@ -10,7 +10,7 @@ public class ManipularMenu extends JFrame {
     }
 
     private void initialize() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel contentPanel = new JPanel();
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
