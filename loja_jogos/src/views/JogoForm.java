@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import javax.sql.rowset.serial.SerialBlob;
@@ -69,8 +70,11 @@ public class JogoForm extends JDialog {
         
         classificacaoFormat = new DecimalFormat("#0");
         txtClassificacao = new JFormattedTextField(classificacaoFormat);
+        
+        DecimalFormatSymbols teste = new DecimalFormatSymbols();
+        teste.setDecimalSeparator('.');
 
-        precoFormat = new DecimalFormat("####0.00");
+        precoFormat = new DecimalFormat("####0.00", teste);
         txtPreco = new JFormattedTextField(precoFormat);
 
         lancamentoFormat = new SimpleDateFormat("yyyy-MM-dd");
