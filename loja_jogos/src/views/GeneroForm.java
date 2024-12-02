@@ -27,6 +27,7 @@ public class GeneroForm extends JDialog {
         fillFields();
     }
 
+    @SuppressWarnings("unused")
     private void initialize() {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -57,7 +58,7 @@ public class GeneroForm extends JDialog {
         btnCancel.addActionListener(e -> dispose());
 
         this.add(panel);
-        this.setSize(220, 120);;
+        this.setSize(220, 120);
         this.setLocationRelativeTo(getParent());
     }
 
@@ -92,5 +93,9 @@ public class GeneroForm extends JDialog {
         }
 
         System.out.println(genero.toString());
+    }
+
+    public Genero getGenero() {
+        return genero;
     }
 }

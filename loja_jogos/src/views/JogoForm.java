@@ -60,6 +60,7 @@ public class JogoForm extends JDialog {
         fillFields();
     }
 
+    @SuppressWarnings("unused")
     private void initialize() {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -102,7 +103,7 @@ public class JogoForm extends JDialog {
         panel.add(txtDesenvolvedor);
         panel.add(radioBtnFisico);
         panel.add(radioBtnDigital);
-        panel.add(new JLabel("Lançamento"));
+        panel.add(new JLabel("Lançamento:"));
         panel.add(txtLancamento);
         panel.add(new JLabel("Imagem:"));
         panel.add(btnImg);
@@ -152,7 +153,7 @@ public class JogoForm extends JDialog {
         btnCancel.addActionListener(e -> dispose());
 
         this.add(panel);
-        this.setSize(520, 220);
+        this.setSize(540, 220);
         this.setLocationRelativeTo(getParent());
     }
 
@@ -226,5 +227,9 @@ public class JogoForm extends JDialog {
         }
 
         System.out.println(jogo.toString());
+    }
+
+    public Jogo getJogo() {
+        return jogo;
     }
 }

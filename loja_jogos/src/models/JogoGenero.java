@@ -36,4 +36,9 @@ public class JogoGenero {
     public void setGeneroId(int generoId) {
         this.generoId = generoId;
     }   
+
+    @Override
+    public String toString() {
+        return "JogoGenero: { id: \""+id+"\", jogo_id: \""+jogoId+"\", jogo_id: \""+generoId+"\" }";
+    }
 }

@@ -3,16 +3,33 @@ package controllers;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import models.*;
 import repositories.*;
+import views.GeneroForm;
+import views.JogoForm;
+import views.JogoGeneroForm;
 import views.ManipularMenu;
 
 public class MenuController {
-    private JogoRepository jogoRepository;
-    private GeneroRepository generoRepository;
-    private JogoGeneroRepository relacaoRepository;
-    private ManipularMenu menu;
+    private final JogoRepository jogoRepository;
+    private final GeneroRepository generoRepository;
+    private final JogoGeneroRepository relacaoRepository;
+    private final ManipularMenu menu;
+
+    private JComboBox<String> updateJogoBox;
+    private JComboBox<String> deleteJogoBox;
+    private JComboBox<String> updateGeneroBox;
+    private JComboBox<String> deleteGeneroBox;
+    private JComboBox<String> updateRelacaoBox;
+    private JComboBox<String> deleteRelacaoBox;
+    private ArrayList<JComboBox<String>> combos;
+
+    private List<Jogo> jogos;
+    private List<Genero> generos;
+    private List<JogoGenero> relacoes;
 
     public MenuController() {
         jogoRepository = new JogoRepository();
@@ -22,36 +39,48 @@ public class MenuController {
         initialize();
     }
 
+    @SuppressWarnings("unused")
     private void initialize() {
+
         //combobox dos jogos (para editar)
-        JComboBox updateJogoBox = new JComboBox<>();
+        updateJogoBox = new JComboBox<>();
         updateJogoBox.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         //combobox dos jogos (para deletar)
-        JComboBox deleteJogoBox = new JComboBox<>();
+        deleteJogoBox = new JComboBox<>();
         deleteJogoBox.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         //combobox dos gêneros (para editar)
-        JComboBox updateGeneroBox = new JComboBox<>();
+        updateGeneroBox = new JComboBox<>();
         updateGeneroBox.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         //combobox dos gêneros (para deletar)
-        JComboBox deleteGeneroBox = new JComboBox<>();
+        deleteGeneroBox = new JComboBox<>();
         deleteGeneroBox.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         //combobox das relações (para editar)
-        JComboBox updateRelacaoBox = new JComboBox<>();
+        updateRelacaoBox = new JComboBox<>();
         updateRelacaoBox.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         //combobox das relações (para deletar)
-        JComboBox deleteRelacaoBox = new JComboBox<>();
+        deleteRelacaoBox = new JComboBox<>();
         deleteRelacaoBox.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
+
+        combos = new ArrayList<>();
+        combos.add(updateJogoBox);
+        combos.add(deleteJogoBox);
+        combos.add(updateGeneroBox);
+        combos.add(deleteGeneroBox);
+        combos.add(updateRelacaoBox);
+        combos.add(deleteRelacaoBox);
+
+        refreshCombos(combos);
 
         //toolbar das tabelas
         JToolBar toolBar = new JToolBar("Tabela", JToolBar.VERTICAL);
         JButton btnJogo = new JButton("Jogos");
         JButton btnGenero = new JButton("Gêneros");
-        JButton btnRelacao = new JButton("Jog/Gên");
+        JButton btnRelacao = new JButton("Relações");
         toolBar.add(btnJogo);
         toolBar.add(btnGenero);
         toolBar.add(btnRelacao);
@@ -80,7 +109,7 @@ public class MenuController {
         generoToolBar.setVisible(false);
 
         //toolbar de manipular relações
-        JToolBar relacaoToolBar = new JToolBar("Jog/Gên", JToolBar.VERTICAL);
+        JToolBar relacaoToolBar = new JToolBar("Relações", JToolBar.VERTICAL);
         JButton btnCreateRelacao = new JButton("Adicionar");
         JButton btnUpdateRelacao = new JButton("Editar");
         JButton btnDeleteRelacao = new JButton("Deletar");
@@ -98,7 +127,7 @@ public class MenuController {
         emptyPanel.setLayout(new BorderLayout());
         menu.add(emptyPanel, BorderLayout.EAST);
 
-        emptyPanel.setVisible(false);
+        emptyPanel.setVisible(true);
 
         //painel de editar jogos
         JPanel updateJogoPanel = new JPanel();
@@ -114,7 +143,7 @@ public class MenuController {
 
         menu.add(updateJogoPanel, BorderLayout.EAST);
 
-        updateJogoPanel.setVisible(true);
+        updateJogoPanel.setVisible(false);
 
         //painel de deletar jogos
         JPanel deleteJogoPanel = new JPanel();
@@ -196,13 +225,13 @@ public class MenuController {
 
         deleteRelacaoPanel.setVisible(false);
 
-        ArrayList<JComponent> toolbars = new ArrayList<JComponent>();
+        ArrayList<JComponent> toolbars = new ArrayList<>();
 
         toolbars.add(jogoToolBar);
         toolbars.add(generoToolBar);
         toolbars.add(relacaoToolBar);
 
-        ArrayList<JComponent> panels = new ArrayList<JComponent>();
+        ArrayList<JComponent> panels = new ArrayList<>();
 
         panels.add(emptyPanel);
         panels.add(updateJogoPanel);
@@ -212,6 +241,7 @@ public class MenuController {
         panels.add(deleteGeneroPanel);
         panels.add(deleteRelacaoPanel);
 
+        //listeners dos botões de navegação
         btnJogo.addActionListener(e -> {
             refreshElements(toolbars);
             jogoToolBar.setVisible(true);
@@ -278,13 +308,270 @@ public class MenuController {
             deleteRelacaoPanel.setVisible(true);
         });
 
+        btnCreateJogo.addActionListener(e -> {
+            createJogo();
+        });
+
+        updateJogo.addActionListener(e -> {
+            updateJogo();
+        });
+
+        deleteJogo.addActionListener(e -> {
+            deleteJogo();
+        });
+
+        btnCreateGenero.addActionListener(e -> {
+            createGenero();
+        });
+
+        updateGenero.addActionListener(e -> {
+            updateGenero();
+        });
+
+        deleteGenero.addActionListener(e -> {
+            deleteGenero();
+        });
+
+        btnCreateRelacao.addActionListener(e -> {
+            createRelacao();
+        });
+
+        updateRelacao.addActionListener(e -> {
+            updateRelacao();
+        });
+
+        deleteRelacao.addActionListener(e -> {
+            deleteRelacao();
+        });
+
         menu.pack();
         menu.setVisible(true);
+    }
+
+    private void createJogo() {
+        JogoForm form = new JogoForm(menu, "Adicionar jogo");
+        form.setVisible(true);
+        Jogo newJogo = form.getJogo();
+        if (newJogo != null) {
+            jogoRepository.createJogo(newJogo);
+            refreshCombos(combos);
+        }
+    }
+
+    private void updateJogo() {
+        int selectedIndex = updateJogoBox.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            Jogo jogo = jogos.get(selectedIndex);
+            
+            JogoForm form = new JogoForm(menu, "Editar jogo", jogo);
+            form.setVisible(true);
+            Jogo updatedJogo = form.getJogo();
+
+            if (updatedJogo != null) {
+                updatedJogo = new Jogo(
+                    jogo.getId(),
+                    updatedJogo.getTitulo(), 
+                    updatedJogo.getImagem(), 
+                    updatedJogo.isTipo(), 
+                    updatedJogo.getClassificacao(), 
+                    updatedJogo.getDesenvolvedor(), 
+                    updatedJogo.getPreco(), 
+                    updatedJogo.getLancamento()
+                );
+                jogoRepository.updateJogo(updatedJogo);
+                refreshCombos(combos);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                menu, 
+                "Adicione um jogo antes de tentar editar",
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    private void deleteJogo() {
+        int selectedIndex = deleteJogoBox.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            int optionValue = JOptionPane.showConfirmDialog(
+                menu,
+                "Tem certeza que deseja deletar este jogo?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (optionValue == JOptionPane.YES_OPTION) {
+                jogoRepository.deleteJogo(jogos.get(selectedIndex).getId());
+                refreshCombos(combos);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                menu, 
+                "Adicione um jogo antes de tentar deletar", 
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    private void createGenero() {
+        GeneroForm form = new GeneroForm(menu, "Adicionar gênero");
+        form.setVisible(true);
+        Genero newGenero = form.getGenero();
+        if (newGenero != null) {
+            generoRepository.createGenero(newGenero);
+            refreshCombos(combos);
+        }
+    }
+
+    private void updateGenero() {
+        int selectedIndex = updateGeneroBox.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            Genero genero = generos.get(selectedIndex);
+            
+            GeneroForm form = new GeneroForm(menu, "Editar gênero", genero);
+            form.setVisible(true);
+            Genero updatedGenero = form.getGenero();
+
+            if (updatedGenero != null) {
+                updatedGenero = new Genero(
+                    genero.getId(),
+                    updatedGenero.getNome()
+                );
+                generoRepository.updateGenero(updatedGenero);
+                refreshCombos(combos);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                menu, 
+                "Adicione um gênero antes de tentar editar",
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    private void deleteGenero() {
+        int selectedIndex = deleteGeneroBox.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            int optionValue = JOptionPane.showConfirmDialog(
+                menu,
+                "Tem certeza que deseja deletar este gênero?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (optionValue == JOptionPane.YES_OPTION) {
+                generoRepository.deleteGenero(generos.get(selectedIndex).getId());
+                refreshCombos(combos);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                menu, 
+                "Adicione um gênero antes de tentar deletar", 
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    private void createRelacao() {
+        JogoGeneroForm form = new JogoGeneroForm(menu, "Adicionar relação", jogos, generos, relacoes);
+        form.setVisible(true);
+        JogoGenero newRelacao = form.getJogoGenero();
+        if (newRelacao != null) {
+            relacaoRepository.createJogoGenero(newRelacao);
+            refreshCombos(combos);
+        }
+    }
+
+    private void updateRelacao() {
+        int selectedIndex = updateRelacaoBox.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            JogoGenero relacao = relacoes.get(selectedIndex);
+            
+            JogoGeneroForm form = new JogoGeneroForm(menu, "Editar relação", jogos, generos, relacoes, relacao);
+            form.setVisible(true);
+            JogoGenero updatedRelacao = form.getJogoGenero();
+
+            if (updatedRelacao != null) {
+                updatedRelacao = new JogoGenero(
+                    relacao.getId(),
+                    updatedRelacao.getJogoId(),
+                    updatedRelacao.getGeneroId()
+                );
+                relacaoRepository.updateJogoGenero(updatedRelacao);
+                refreshCombos(combos);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                menu, 
+                "Adicione uma relação antes de tentar editar",
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    private void deleteRelacao() {
+        int selectedIndex = deleteRelacaoBox.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            int optionValue = JOptionPane.showConfirmDialog(
+                menu,
+                "Tem certeza que deseja deletar este gênero?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (optionValue == JOptionPane.YES_OPTION) {
+                relacaoRepository.deleteJogoGenero(relacoes.get(selectedIndex).getId());
+                refreshCombos(combos);
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                menu, 
+                "Adicione uma relação antes de tentar deletar", 
+                "Aviso",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
     }
 
     private void refreshElements(ArrayList<JComponent> components) {
         for (JComponent elem : components) {
             elem.setVisible(false);
+        }
+    }
+
+    private void refreshCombos(ArrayList<JComboBox<String>> combos) {
+        jogos = jogoRepository.listAllJogos();
+        generos = generoRepository.listAllGeneros();
+        relacoes = relacaoRepository.listAllJogoGeneros();
+
+        for (JComboBox<String> combo : combos) {
+            combo.removeAllItems();
+        }
+
+        for (Jogo jogo : jogos) {
+            combos.get(0).addItem(jogo.getTitulo());
+            combos.get(1).addItem(jogo.getTitulo());
+        }
+
+        for (Genero genero : generos) {
+            combos.get(2).addItem(genero.getNome());
+            combos.get(3).addItem(genero.getNome());
+        }
+
+        for (JogoGenero relacao : relacoes) {
+            combos.get(4).addItem(relacao.getId()+", "+relacao.getJogoId()+", "+relacao.getGeneroId());
+            combos.get(5).addItem(relacao.getId()+", "+relacao.getJogoId()+", "+relacao.getGeneroId());
         }
     }
 

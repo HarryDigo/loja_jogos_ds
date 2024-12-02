@@ -128,7 +128,7 @@ public class GeneroRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao deletar Gênero");
+            System.out.println("Erro ao deletar gênero");
         }
     }
 }
