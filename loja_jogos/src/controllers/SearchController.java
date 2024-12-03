@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
-
 import models.Genero;
 import models.Jogo;
 import models.JogoGenero;
@@ -45,6 +43,8 @@ public class SearchController {
     private JLabel lblLancamento;
 
     private JPanel jogosPanel;
+
+    private JScrollPane scrollPane;
 
     private List<Jogo> jogos;
     private List<Genero> generos;
@@ -118,7 +118,7 @@ public class SearchController {
         labelPanel.add(lblPreco);
         labelPanel.add(lblLancamento);
 
-        responseDim.height = labelPanel.getPreferredSize().height + 50;
+        responseDim.height = labelPanel.getPreferredSize().height + 98;
         responsePanel.setPreferredSize(responseDim);
 
         responsePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -134,16 +134,16 @@ public class SearchController {
         rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         Dimension rightDim = leftPanel.getPreferredSize();
-        JScrollPane scrollPane = new JScrollPane();
+        scrollPane = new JScrollPane();
 
         scrollPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        rightDim.width = 300;
+        rightDim.width = 450;
         scrollPane.setPreferredSize(rightDim);
 
         jogosPanel = new JPanel();
         jogosPanel.setBackground(Color.cyan);
 
-        jogosPanel.add(new JogoPanel(jogos.get(0)));
+        refreshJogosGrid(jogos);
 
         scrollPane.setViewportView(jogosPanel);
         rightPanel.add(scrollPane);
@@ -157,6 +157,19 @@ public class SearchController {
         menu.pack();
         menu.setLocationRelativeTo(null);
         menu.setVisible(true);
+    }
+
+    public void refreshJogosGrid(List<Jogo> jogos) {
+        int rows;
+
+        if (jogos.size() % 3 == 0) rows = jogos.size()/3;
+        else rows = jogos.size()/3 + 1;
+
+        jogosPanel.setPreferredSize(new Dimension(260, rows*186));
+        
+        for (Jogo jogo : jogos) {
+            jogosPanel.add(new JogoPanel(jogo));
+        }
     }
     
     public void start() {}

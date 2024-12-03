@@ -1,11 +1,12 @@
 package views;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -13,7 +14,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
-
 import models.Jogo;
 
 public class JogoPanel extends JPanel {
@@ -46,11 +46,36 @@ public class JogoPanel extends JPanel {
         }
 
         lblImg = new JLabel();
-        lblImg.setIcon(new ImageIcon(imagem.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH)));
 
+        int height = imagem.getHeight();
+        int width = imagem.getWidth();
+
+        float scaleFactor;
+        if (height > width) {
+            scaleFactor = (float) 108/height;
+        } else {
+            scaleFactor = (float) 108/width;
+        }
+
+        Image scaledImage = imagem.getScaledInstance(Math.round(width*scaleFactor), Math.round(height*scaleFactor), Image.SCALE_SMOOTH);
+
+        lblImg.setIcon(new ImageIcon(scaledImage));
+
+        lblImg.setHorizontalAlignment(JLabel.CENTER);
+        lblImg.setVerticalAlignment(JLabel.CENTER);
+
+        Dimension imgDim = new Dimension(107, 107);
+
+        lblImg.setMinimumSize(imgDim);
+        lblImg.setMaximumSize(imgDim);
+        lblImg.setPreferredSize(imgDim);
+
+        lblImg.setBackground(new Color(222, 222, 222));
+        lblImg.setOpaque(true);
+        lblImg.setBorder(BorderFactory.createLineBorder(new Color(206, 206, 206), 1));
+        
+        this.setPreferredSize(new Dimension(120, 180));
         this.add(lblImg);
-
-        this.setPreferredSize(new Dimension(200, 200));
     }
 
     public Jogo getJogo() {
