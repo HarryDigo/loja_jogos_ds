@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import models.Jogo;
 
@@ -73,9 +74,12 @@ public class JogoPanel extends JPanel {
         lblImg.setBackground(new Color(222, 222, 222));
         lblImg.setOpaque(true);
         lblImg.setBorder(BorderFactory.createLineBorder(new Color(206, 206, 206), 1));
+
+        JLabel lblTitulo = new JLabel("<html>"+jogo.getTitulo()+"</html>", SwingConstants.CENTER);
         
         this.setPreferredSize(new Dimension(120, 180));
         this.add(lblImg);
+        this.add(lblTitulo);
     }
 
     public Jogo getJogo() {

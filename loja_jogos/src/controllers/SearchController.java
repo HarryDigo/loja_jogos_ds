@@ -5,6 +5,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -30,6 +34,8 @@ public class SearchController {
     private final JogoGeneroRepository relacaoRepository;
     private final SearchMenu menu;
 
+    private MouseAdapter mouseAdapter;
+
     private JTextField txtTituloFilter;
 
     private JComboBox<String> generoFilterBox;
@@ -43,6 +49,9 @@ public class SearchController {
     private JLabel lblLancamento;
 
     private JPanel jogosPanel;
+
+    JPanel leftPanel;
+    JPanel rightPanel;
 
     private JScrollPane scrollPane;
 
@@ -59,6 +68,15 @@ public class SearchController {
     }
 
     private void initialize() {
+        mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                if (me.getSource() instanceof JogoPanel panel) {
+                    fillResponse(panel.getJogo());
+                }
+            }
+        };
+
         jogos = jogoRepository.listAllJogos();
         generos = generoRepository.listAllGeneros();
         relacoes = relacaoRepository.listAllJogoGeneros();
@@ -67,7 +85,7 @@ public class SearchController {
         queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.Y_AXIS));
         queryPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
-        txtTituloFilter = new JTextField(10);
+        txtTituloFilter = new JTextField(12);
 
         JPanel tituloPanel = new JPanel( new FlowLayout(FlowLayout.LEFT));
         tituloPanel.add(new JLabel("Titulo:"));
@@ -125,12 +143,12 @@ public class SearchController {
 
         responsePanel.add(labelPanel);
 
-        JPanel leftPanel = new JPanel();
+        leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.add(queryPanel);
         leftPanel.add(responsePanel);
 
-        JPanel rightPanel = new JPanel();
+        rightPanel = new JPanel();
         rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         Dimension rightDim = leftPanel.getPreferredSize();
@@ -144,6 +162,7 @@ public class SearchController {
         jogosPanel.setBackground(Color.cyan);
 
         refreshJogosGrid(jogos);
+        fillGeneroBox();
 
         scrollPane.setViewportView(jogosPanel);
         rightPanel.add(scrollPane);
@@ -154,21 +173,124 @@ public class SearchController {
         menu.add(leftPanel, BorderLayout.WEST);
         menu.add(rightPanel, BorderLayout.EAST);
 
+        btnSearch.addActionListener(e -> {
+            runQuery();
+        });
+
         menu.pack();
         menu.setLocationRelativeTo(null);
         menu.setVisible(true);
     }
 
-    public void refreshJogosGrid(List<Jogo> jogos) {
+    private void refreshJogosGrid(List<Jogo> jogos) {
         int rows;
+
+        jogosPanel.removeAll();
 
         if (jogos.size() % 3 == 0) rows = jogos.size()/3;
         else rows = jogos.size()/3 + 1;
 
         jogosPanel.setPreferredSize(new Dimension(260, rows*186));
         
+        JogoPanel jogoPanel;
         for (Jogo jogo : jogos) {
-            jogosPanel.add(new JogoPanel(jogo));
+            jogoPanel = new JogoPanel(jogo);
+
+            jogoPanel.addMouseListener(mouseAdapter);
+
+            jogosPanel.add(jogoPanel);
+        }
+
+        if (jogos.isEmpty()) {
+            JLabel errLabel = new JLabel("Nenhum jogo encontrado :(");
+
+            errLabel.setHorizontalAlignment(JLabel.CENTER);
+            errLabel.setVerticalAlignment(JLabel.CENTER);
+
+            Dimension errLabelDim = new Dimension(450, leftPanel.getPreferredSize().height - 20);
+
+            errLabel.setMinimumSize(errLabelDim);
+            errLabel.setMaximumSize(errLabelDim);
+            errLabel.setPreferredSize(errLabelDim);
+
+            errLabel.setFont(new Font("SansSerif", Font.BOLD,24));
+            jogosPanel.add(errLabel);
+        }
+        
+        rightPanel.revalidate();
+        rightPanel.repaint();
+    }
+
+    private void fillResponse(Jogo jogo) {
+        lblTitulo.setText("<html> Título: "+jogo.getTitulo()+"</html>");
+
+        String generoString = "<html> Gêneros: ";
+        List<Genero> generos = relacaoRepository.listGenerosByJogo(jogo.getId());
+
+        for (Genero genero : generos) {
+            generoString += genero.getNome()+", ";
+        }
+        generoString = generoString.substring(0, generoString.length() - 2);
+        generoString += "</html>";
+        lblGenero.setText(generoString);
+
+        lblDesenvolvedor.setText("<html> Desenvolvedor: "+jogo.getDesenvolvedor()+"</html>");
+
+        String tipo = "Físico";
+        if (jogo.isTipo()) tipo = "Digital";
+        lblTipo.setText("<html> Tipo: "+tipo+"</html>");
+
+        lblClassificacao.setText("<html> Classificação etária: "+jogo.getClassificacao()+"</html>");
+        lblPreco.setText("<html> Preço: R$"+jogo.getPreco()+"</html>");
+        lblLancamento.setText("<html> Lançamento: "+jogo.getLancamento()+"</html>");
+    }
+
+    private void fillGeneroBox() {
+        generoFilterBox.addItem("Nada selecionado");
+
+        for (Genero genero : generos) {
+            generoFilterBox.addItem(genero.getNome());
+        }
+    }
+
+    private void runQuery() {
+        if (txtTituloFilter.getText().trim().isEmpty() && generoFilterBox.getSelectedIndex() < 1) {
+            refreshJogosGrid(jogos);
+            return;
+        }
+
+        List<Jogo> tituloFilteredJogos = null;
+        List<Jogo> generoFilteredJogos = null;
+
+        if (!txtTituloFilter.getText().trim().isEmpty() && generoFilterBox.getSelectedIndex() > 0) {
+            tituloFilteredJogos = jogoRepository.listJogosByTitulo(txtTituloFilter.getText().trim());
+
+            Genero selectedGenero = generos.get(generoFilterBox.getSelectedIndex() - 1);
+            generoFilteredJogos = relacaoRepository.listJogosByGenero(selectedGenero.getId());
+
+            List<Jogo> finalJogos = new ArrayList<>();
+            for (Jogo jogo : tituloFilteredJogos) {
+                for (Jogo jogo2 : generoFilteredJogos) {
+                    if (jogo.getId() == jogo2.getId()) finalJogos.add(jogo);
+                }
+            }
+            System.out.println(finalJogos);
+            refreshJogosGrid(finalJogos);
+            return;
+        }
+
+        if (!txtTituloFilter.getText().trim().isEmpty()) {
+            tituloFilteredJogos = jogoRepository.listJogosByTitulo(txtTituloFilter.getText().trim());
+            System.out.println(tituloFilteredJogos);
+            refreshJogosGrid(tituloFilteredJogos);
+        }
+        
+        if (generoFilterBox.getSelectedIndex() > 0) {
+            Genero selectedGenero = generos.get(generoFilterBox.getSelectedIndex() - 1);
+
+            generoFilteredJogos = relacaoRepository.listJogosByGenero(selectedGenero.getId());
+            System.out.println(generoFilteredJogos);
+            refreshJogosGrid(generoFilteredJogos);
         }
     }
     
