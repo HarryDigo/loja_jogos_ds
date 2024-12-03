@@ -1,9 +1,14 @@
 package repositories;
 
-import config.DbConnection;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import config.DbConnection;
 import models.Jogo;
 
 public class JogoRepository {
@@ -63,6 +68,47 @@ public class JogoRepository {
 
         } catch (SQLException e) {
             System.out.println("Erro ao listar todos os jogos");
+        }
+
+        return jogos;
+    }
+
+    public List<Jogo> listJogosByTitulo(String titulo) {
+        List<Jogo> jogos = new ArrayList<>();
+        String sql = """
+            SELECT * FROM jogo
+            WHERE titulo LIKE ?
+        """;
+
+        try (
+            Connection conn = DbConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+        ) {
+            titulo = titulo
+                .replace("!", "!!")
+                .replace("%", "!%")
+                .replace("_", "!_")
+                .replace("[", "![");
+
+            stmt.setString(1, "%"+titulo+"%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Jogo jogo = new Jogo(
+                    rs.getInt("id"),
+                    rs.getString("titulo"),
+                    rs.getBlob("imagem"),
+                    rs.getBoolean("tipo"),
+                    rs.getInt("classificacao"),
+                    rs.getString("desenvolvedor"),
+                    rs.getDouble("preco"),
+                    rs.getDate("lancamento")
+                );
+                jogos.add(jogo);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar jogos por título");
         }
 
         return jogos;

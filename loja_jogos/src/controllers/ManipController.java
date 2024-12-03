@@ -4,20 +4,31 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.border.BevelBorder;
-import models.*;
-import repositories.*;
+import models.Genero;
+import models.Jogo;
+import models.JogoGenero;
+import repositories.GeneroRepository;
+import repositories.JogoGeneroRepository;
+import repositories.JogoRepository;
 import views.GeneroForm;
 import views.JogoForm;
 import views.JogoGeneroForm;
-import views.ManipularMenu;
+import views.ManipMenu;
 
-public class MenuController {
+public class ManipController {
     private final JogoRepository jogoRepository;
     private final GeneroRepository generoRepository;
     private final JogoGeneroRepository relacaoRepository;
-    private final ManipularMenu menu;
+    private final ManipMenu menu;
 
     private JComboBox<String> updateJogoBox;
     private JComboBox<String> deleteJogoBox;
@@ -31,11 +42,11 @@ public class MenuController {
     private List<Genero> generos;
     private List<JogoGenero> relacoes;
 
-    public MenuController() {
+    public ManipController() {
         jogoRepository = new JogoRepository();
         generoRepository = new GeneroRepository();
         relacaoRepository = new JogoGeneroRepository();
-        menu = new ManipularMenu();
+        menu = new ManipMenu();
         initialize();
     }
 
@@ -345,6 +356,7 @@ public class MenuController {
         });
 
         menu.pack();
+        menu.setLocationRelativeTo(null);
         menu.setVisible(true);
     }
 

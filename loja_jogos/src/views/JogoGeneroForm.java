@@ -1,9 +1,18 @@
 package views;
 
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.util.List;
-import javax.swing.*;
-import models.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import models.Genero;
+import models.Jogo;
+import models.JogoGenero;
 
 public class JogoGeneroForm extends JDialog {
     private JComboBox<String> jogoBox;

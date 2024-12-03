@@ -1,8 +1,20 @@
 package views;
 
-import controllers.MenuController;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import controllers.ManipController;
+import controllers.SearchController;
+import controllers.TableController;
 
 public class InitialMenu extends JFrame {
     private JLabel titulo;
@@ -17,6 +29,7 @@ public class InitialMenu extends JFrame {
         initialize();
     }
 
+    @SuppressWarnings("unused")
     private void initialize() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -50,8 +63,21 @@ public class InitialMenu extends JFrame {
         });
 
         btnManip.addActionListener(e -> {
-            MenuController manipMenu = new MenuController();
+            ManipController manipMenu = new ManipController();
             manipMenu.start();
+            this.dispose();
+        });
+
+        btnTable.addActionListener(e -> {
+            TableController tableMenu = new TableController();
+            tableMenu.start();
+            this.dispose();
+        });
+
+        btnSearch.addActionListener(e -> {
+            SearchController searchMenu = new SearchController();
+            searchMenu.start();
+            this.dispose();
         });
 
         this.pack();
