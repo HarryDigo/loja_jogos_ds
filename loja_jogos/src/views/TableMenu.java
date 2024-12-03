@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
 import models.Genero;
@@ -53,7 +52,6 @@ public class TableMenu extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        scrollPane.setLayout(new ScrollPaneLayout());
 
         String[] jogoColumns = {"Id", "Título", "Tipo", "Classificação", "Desenvolvedor", "Preço", "Lançamento"};
         jogoTableModel = new DefaultTableModel(jogoColumns, 0);

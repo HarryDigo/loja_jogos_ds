@@ -1,6 +1,7 @@
 package controllers;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -12,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
@@ -21,6 +23,7 @@ import models.JogoGenero;
 import repositories.GeneroRepository;
 import repositories.JogoGeneroRepository;
 import repositories.JogoRepository;
+import views.JogoPanel;
 import views.SearchMenu;
 
 public class SearchController {
@@ -41,6 +44,8 @@ public class SearchController {
     private JLabel lblPreco;
     private JLabel lblLancamento;
 
+    private JPanel jogosPanel;
+
     private List<Jogo> jogos;
     private List<Genero> generos;
     private List<JogoGenero> relacoes;
@@ -54,6 +59,9 @@ public class SearchController {
     }
 
     private void initialize() {
+        jogos = jogoRepository.listAllJogos();
+        generos = generoRepository.listAllGeneros();
+        relacoes = relacaoRepository.listAllJogoGeneros();
 
         JPanel queryPanel = new JPanel();
         queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.Y_AXIS));
@@ -78,7 +86,11 @@ public class SearchController {
 
         JButton btnSearch = new JButton("Pesquisar");
 
-        queryPanel.add(btnSearch);
+        JPanel btnPanel = new JPanel();
+        btnPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        btnPanel.add(btnSearch);
+
+        queryPanel.add(btnPanel);
 
         queryPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -93,7 +105,7 @@ public class SearchController {
         JPanel responsePanel = new JPanel();
         responsePanel.setLayout(new BoxLayout(responsePanel, BoxLayout.Y_AXIS));
         responsePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        Dimension dim = queryPanel.getPreferredSize();
+        Dimension responseDim = queryPanel.getPreferredSize();
 
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
@@ -106,8 +118,8 @@ public class SearchController {
         labelPanel.add(lblPreco);
         labelPanel.add(lblLancamento);
 
-        dim.height = labelPanel.getPreferredSize().height + 10;
-        responsePanel.setPreferredSize(dim);
+        responseDim.height = labelPanel.getPreferredSize().height + 50;
+        responsePanel.setPreferredSize(responseDim);
 
         responsePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -118,7 +130,29 @@ public class SearchController {
         leftPanel.add(queryPanel);
         leftPanel.add(responsePanel);
 
+        JPanel rightPanel = new JPanel();
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+
+        Dimension rightDim = leftPanel.getPreferredSize();
+        JScrollPane scrollPane = new JScrollPane();
+
+        scrollPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        rightDim.width = 300;
+        scrollPane.setPreferredSize(rightDim);
+
+        jogosPanel = new JPanel();
+        jogosPanel.setBackground(Color.cyan);
+
+        jogosPanel.add(new JogoPanel(jogos.get(0)));
+
+        scrollPane.setViewportView(jogosPanel);
+        rightPanel.add(scrollPane);
+
+        rightPanel.revalidate();
+        rightPanel.repaint();
+
         menu.add(leftPanel, BorderLayout.WEST);
+        menu.add(rightPanel, BorderLayout.EAST);
 
         menu.pack();
         menu.setLocationRelativeTo(null);
