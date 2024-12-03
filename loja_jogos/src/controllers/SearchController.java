@@ -21,7 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import models.Genero;
 import models.Jogo;
-import models.JogoGenero;
 import repositories.GeneroRepository;
 import repositories.JogoGeneroRepository;
 import repositories.JogoRepository;
@@ -57,7 +56,6 @@ public class SearchController {
 
     private List<Jogo> jogos;
     private List<Genero> generos;
-    private List<JogoGenero> relacoes;
 
     public SearchController() {
         jogoRepository = new JogoRepository();
@@ -67,6 +65,7 @@ public class SearchController {
         initialize();
     }
 
+    @SuppressWarnings("unused")
     private void initialize() {
         mouseAdapter = new MouseAdapter() {
             @Override
@@ -79,7 +78,6 @@ public class SearchController {
 
         jogos = jogoRepository.listAllJogos();
         generos = generoRepository.listAllGeneros();
-        relacoes = relacaoRepository.listAllJogoGeneros();
 
         JPanel queryPanel = new JPanel();
         queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.Y_AXIS));
@@ -225,9 +223,9 @@ public class SearchController {
         lblTitulo.setText("<html> Título: "+jogo.getTitulo()+"</html>");
 
         String generoString = "<html> Gêneros: ";
-        List<Genero> generos = relacaoRepository.listGenerosByJogo(jogo.getId());
+        List<Genero> jogoGeneros = relacaoRepository.listGenerosByJogo(jogo.getId());
 
-        for (Genero genero : generos) {
+        for (Genero genero : jogoGeneros) {
             generoString += genero.getNome()+", ";
         }
         generoString = generoString.substring(0, generoString.length() - 2);
@@ -259,8 +257,8 @@ public class SearchController {
             return;
         }
 
-        List<Jogo> tituloFilteredJogos = null;
-        List<Jogo> generoFilteredJogos = null;
+        List<Jogo> tituloFilteredJogos;
+        List<Jogo> generoFilteredJogos;
 
         if (!txtTituloFilter.getText().trim().isEmpty() && generoFilterBox.getSelectedIndex() > 0) {
             tituloFilteredJogos = jogoRepository.listJogosByTitulo(txtTituloFilter.getText().trim());
