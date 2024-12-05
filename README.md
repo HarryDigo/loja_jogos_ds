@@ -6,33 +6,22 @@ Projeto do 4º bimestre de DS
 
 Será um programa que lida com o estoque de jogos físicos ou digitais de uma loja, por enquanto será bem simples.
 
-### Objetivos secundários
+### Extras
 
-Além da JTable obrigatória, pretendo fazer uma tela que tem um catálogo em grid de todos os jogos com uma imagem e título, podendo selecionar os registros de cada (possivelmente pesquisa de títulos nesse menu)
+Infelizmente não conseguir fazer os campos formatados demonstrarem seus formatos, então o formato dos campos de inserção, são:
+- Lançamento: "AAAA-MM-DD"
+- Preço: "####0.00"
+- Classificação etária: "#0"
+    * #: qualquer dígito, ou vazio;
+    * 0: qualquer dígito, padrão 0;
 
-Aprender a fazer layout mais estilo html e CSS, de um jeito que fica mais bonito e correto, mais profissional
+Na source, está incluso o banco de dados final e uma versão vazia deste
+Todas as imagem utilizadas também foram salvas em assets
 
-### Modelos
+Desculpa pela demora professores, estava gripado e me sentindo mal para gravar o vídeo e comentar o código a tempo, no caso, ainda tenho que comentar o código, mas farei isto o mais cedo possível, obrigado pela compreensão.
 
-Jogo:
-- id: auto increment
-- titulo: string
-- imagem: blob (complicado)
-- tipo: digital ou físico
-- genero: relação many to many (de algum jeito) (encontrei um jeito)
-- classificacao etaria: (int)
-- desenvolnedor: string
-- preco: decimal
-- lancamanto: data
+Vários erros não demonstrados no vídeo foram tratados, como tentar editar/deletar registros inexistentes, erros com arquivos incorretos ou corrompidos no lugar das imagens no bd e erros gerais que posso ter esquecido aqui.
 
-Genero:
-- id: auto increment provavelmente
-- nome: string
+Comando para compilar (dentro de src): javac -d ../bin \*.\* config/\*.java controllers/\*.java repositories/\*.java views/\*.java
 
-GeneroJogo:
-- Jogo: (PK/FK) com cascade de delete
-- Genero: (PK/FK) com cascade de delete (também)
-
-Comando para compilar (no src): javac -d ../bin \*.\* config/\*.java controllers/\*.java repositories/\*.java views/\*.java
-
-Comando para rodar (no src): java -cp "../bin;../lib/\*" App
+Comando para rodar (dentrod de src): java -cp "../bin;../lib/\*" App
