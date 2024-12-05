@@ -1,16 +1,28 @@
 package views;
 
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import javax.sql.rowset.serial.SerialBlob;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import models.Jogo;
 
 public class JogoForm extends JDialog {
@@ -60,6 +72,7 @@ public class JogoForm extends JDialog {
         fillFields();
     }
 
+    @SuppressWarnings("unused")
     private void initialize() {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -68,8 +81,11 @@ public class JogoForm extends JDialog {
         
         classificacaoFormat = new DecimalFormat("#0");
         txtClassificacao = new JFormattedTextField(classificacaoFormat);
+        
+        DecimalFormatSymbols teste = new DecimalFormatSymbols();
+        teste.setDecimalSeparator('.');
 
-        precoFormat = new DecimalFormat("####0.00");
+        precoFormat = new DecimalFormat("####0.00", teste);
         txtPreco = new JFormattedTextField(precoFormat);
 
         lancamentoFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -102,7 +118,7 @@ public class JogoForm extends JDialog {
         panel.add(txtDesenvolvedor);
         panel.add(radioBtnFisico);
         panel.add(radioBtnDigital);
-        panel.add(new JLabel("Lançamento"));
+        panel.add(new JLabel("Lançamento:"));
         panel.add(txtLancamento);
         panel.add(new JLabel("Imagem:"));
         panel.add(btnImg);
@@ -152,7 +168,7 @@ public class JogoForm extends JDialog {
         btnCancel.addActionListener(e -> dispose());
 
         this.add(panel);
-        this.setSize(520, 220);
+        this.setSize(540, 220);
         this.setLocationRelativeTo(getParent());
     }
 
@@ -224,5 +240,11 @@ public class JogoForm extends JDialog {
             jogo.setPreco(Double.parseDouble(txtPreco.getText().trim()));
             jogo.setLancamento(java.sql.Date.valueOf(txtLancamento.getText().trim()));
         }
+
+        System.out.println(jogo.toString());
+    }
+
+    public Jogo getJogo() {
+        return jogo;
     }
 }

@@ -1,15 +1,8 @@
-import javax.swing.JFrame;
-import views.JogoForm;
+import views.InitialMenu;
 
 public class App {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
-
-        JFrame oi = new JFrame();
-
-        JogoForm tela = new JogoForm(oi, "Teste");
-
-        oi.setVisible(true);
-        tela.setVisible(true);
+        public static void main(String[] args) throws Exception {
+        @SuppressWarnings("unused")
+        InitialMenu initialMenu = new InitialMenu();
     }
 }

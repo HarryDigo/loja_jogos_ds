@@ -1,9 +1,14 @@
 package repositories;
 
-import config.DbConnection;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import config.DbConnection;
 import models.Jogo;
 
 public class JogoRepository {
@@ -16,7 +21,7 @@ public class JogoRepository {
 
         try (
             Connection conn = DbConnection.getConnection();
-            PreparedStatement stmt =conn.prepareStatement(sql)
+            PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, jogo.getTitulo());
@@ -33,7 +38,7 @@ public class JogoRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao adicionar contato");
+            System.out.println("Erro ao adicionar jogo");
         }
     }
 
@@ -68,6 +73,47 @@ public class JogoRepository {
         return jogos;
     }
 
+    public List<Jogo> listJogosByTitulo(String titulo) {
+        List<Jogo> jogos = new ArrayList<>();
+        String sql = """
+            SELECT * FROM jogo
+            WHERE titulo LIKE ?
+        """;
+
+        try (
+            Connection conn = DbConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+        ) {
+            titulo = titulo
+                .replace("!", "!!")
+                .replace("%", "!%")
+                .replace("_", "!_")
+                .replace("[", "![");
+
+            stmt.setString(1, "%"+titulo+"%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Jogo jogo = new Jogo(
+                    rs.getInt("id"),
+                    rs.getString("titulo"),
+                    rs.getBlob("imagem"),
+                    rs.getBoolean("tipo"),
+                    rs.getInt("classificacao"),
+                    rs.getString("desenvolvedor"),
+                    rs.getDouble("preco"),
+                    rs.getDate("lancamento")
+                );
+                jogos.add(jogo);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar jogos por título");
+        }
+
+        return jogos;
+    }
+
     public Jogo getJogoById(int id) {
         Jogo jogo = null;
         String sql = "SELECT * FROM jogo WHERE id = ?";
@@ -94,7 +140,7 @@ public class JogoRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar todos os jogos");
+            System.out.println("Erro ao buscar jogo");
         }
 
         return jogo;
@@ -109,7 +155,7 @@ public class JogoRepository {
 
         try (
             Connection conn = DbConnection.getConnection();
-            PreparedStatement stmt =conn.prepareStatement(sql)
+            PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, jogo.getTitulo());
@@ -123,13 +169,13 @@ public class JogoRepository {
 
             int affectedLines = stmt.executeUpdate();
             if (affectedLines > 0) {
-                System.out.println("Jogo adicionado com sucesso");
+                System.out.println("Jogo atualizado com sucesso");
             } else {
                 System.out.println("Jogo não encontrado");
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao adicionar contato");
+            System.out.println("Erro ao atualizar jogo");
         }
     }
 
