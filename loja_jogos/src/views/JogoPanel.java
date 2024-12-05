@@ -48,19 +48,23 @@ public class JogoPanel extends JPanel {
 
         lblImg = new JLabel();
 
-        int height = imagem.getHeight();
-        int width = imagem.getWidth();
+        try {
+            int height = imagem.getHeight();
+            int width = imagem.getWidth();
 
-        float scaleFactor;
-        if (height > width) {
-            scaleFactor = (float) 108/height;
-        } else {
-            scaleFactor = (float) 108/width;
+            float scaleFactor;
+            if (height > width) {
+                scaleFactor = (float) 108/height;
+            } else {
+                scaleFactor = (float) 108/width;
+            }
+
+            Image scaledImage = imagem.getScaledInstance(Math.round(width*scaleFactor), Math.round(height*scaleFactor), Image.SCALE_SMOOTH);
+
+            lblImg.setIcon(new ImageIcon(scaledImage));
+        } catch (NullPointerException e) {
+            System.err.println("Imagem não encontrada para jogo: "+jogo.getTitulo());
         }
-
-        Image scaledImage = imagem.getScaledInstance(Math.round(width*scaleFactor), Math.round(height*scaleFactor), Image.SCALE_SMOOTH);
-
-        lblImg.setIcon(new ImageIcon(scaledImage));
 
         lblImg.setHorizontalAlignment(JLabel.CENTER);
         lblImg.setVerticalAlignment(JLabel.CENTER);
